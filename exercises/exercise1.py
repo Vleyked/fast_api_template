@@ -24,3 +24,71 @@ Create a new endpoint `GET /search` that accepts the following optional query pa
     Input expire_date -> {"expire_date": ["2023-09-23", "2023-09-10", "2023-09-11"] }
 
 """
+from typing import List, Optional
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/search/")
+def search_foods(
+    type: Optional[str] = None,
+    name: Optional[str] = None,
+    grams: Optional[str] = None,
+    kcal: Optional[str] = None,
+    expire_date: Optional[str] = None,
+) -> List[dict]:
+    # This is just a ock data for the sake of this exercise
+    foods = [
+        {
+            "type": "vegetables",
+            "name": "apple",
+            "grams": "50",
+            "kcal": "45",
+            "expire_date": "2023-09-23",
+        },
+        {
+            "type": "vegetables",
+            "name": "banana",
+            "grams": "46",
+            "kcal": "90",
+            "expire_date": "2023-09-22",
+        },
+        {
+            "type": "poultry",
+            "name": "chicken breast",
+            "grams": "66",
+            "kcal": "200",
+            "expire_date": "2023-09-10",
+        },
+        {
+            "type": "poultry",
+            "name": "eggs",
+            "grams": "55",
+            "kcal": "170",
+            "expire_date": "2023-09-10",
+        },
+        {
+            "type": "vegetables",
+            "name": "toffu",
+            "grams": "44",
+            "kcal": "159",
+            "expire_date": "2023-09-10",
+        },
+    ]
+
+    if type:
+        foods = [food for food in foods if type.lower() in food["type"].lower()]
+    if name:
+        foods = [food for food in foods if name.lower() in food["name"].lower()]
+    if grams:
+        foods = [food for food in foods if grams.lower() in food["grams"].lower()]
+    if kcal:
+        foods = [food for food in foods if kcal.lower() in food["kcal"].lower()]
+    if expire_date:
+        foods = [
+            food for food in foods if expire_date.lower() in food["expire_date"].lower()
+        ]
+
+    return foods
